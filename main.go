@@ -3,13 +3,10 @@ package main
 import (
 	"falling_rest/api"
 	"fmt"
-	"strings"
-
-	//"encoding/json"
 	"html/template"
 	"net/http"
 	"os"
-	//"strings"
+	"strings"
 	//"strconv"
 )
 

@@ -1,5 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --font-sans: Inter, sans-serif;
+}
+
 html, body {
-    margin: 0;
     background-color: #171717;
-    color: #e7e7e7
+    color: #e7e7e7;
+    font-family: var(--font-sans);
+}
+
+* {
+    margin: 0;
+}
+
+body {
+    margin-left: 64px
+}
+
+h1 {
+  margin-top: 32px;
+  font-size: xx-large;
+  font-weight: 500;
+  font-style: normal;
+}
+
+h2 {
+  margin-top: 32px;
+  font-size: x-large;
+  font-weight: 500;
+  font-style: normal;
+}
+
+code {
+    font-family: var(--font-mono);
+}
+
+#line {
+    white-space: pre;
+}
+
+#flex-get {
+    display: flex;
+    flex-direction: row;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    white-space: pre;
+}
+
+#clickable {
+    color: #fb64b6;
+    font-size: small;
+    cursor: pointer;
+    margin-top: 2px;
+    text-decoration: none;
 }
