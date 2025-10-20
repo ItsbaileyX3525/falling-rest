@@ -1,6 +1,7 @@
 package main
 
 import (
+	"falling_rest/api"
 	"fmt"
 	"strings"
 
@@ -23,25 +24,54 @@ var testItems = []Item{
 }*/
 
 var extensions = map[string]string{
-	"css": "text/css",
-	"js":  "application/javascript",
-	"ico": "image/x-icon",
+	"css":  "text/css",
+	"js":   "application/javascript",
+	"ico":  "image/x-icon",
+	"png":  "image/png",
+	"gif":  "image/gif",
+	"jpg":  "image/jpeg",
+	"jpeg": "image/jpeg",
+	"svg":  "image/svg+xml",
+	"mp3":  "audio/mpeg",
+	"wav":  "audio/x-wav",
+	"ogg":  "application/ogg", //Why?
+}
+
+var endpoints = map[string]func() []byte{
+	"seasonalFacts": api.Season,
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	fullUrl := r.URL.String()
 	suffix := strings.Split(fullUrl, ".")
+
+	//Handle files
 	if strings.HasSuffix(fullUrl, ".js") || strings.HasSuffix(fullUrl, ".css") || strings.HasSuffix(fullUrl, ".ico") {
 		data, err := os.ReadFile(fmt.Sprintf("public%s", fullUrl))
 		if err != nil {
 			fmt.Println(err)
 		} else {
-			w.Header().Set("Content-Type", fmt.Sprintf(".%s", extensions[suffix[1]]))
+			w.Header().Set("Content-Type", fmt.Sprintf("%s", extensions[suffix[1]]))
 			w.Write(data)
 		}
 		return
 	}
 
+	//Handle API endpoints
+	urlSplit := strings.Split(fullUrl, "/")
+	if urlSplit[1] == "api" {
+		apiEndpoint := urlSplit[2]
+		if _, ok := endpoints[apiEndpoint]; !ok {
+			return
+		}
+		data := endpoints[apiEndpoint]()
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(data)
+		return
+	}
+
+	//Handle and render HTML
 	fullUrl = strings.Replace(fullUrl, ".html", "", -1)
 
 	if fullUrl == "/" {
@@ -62,6 +92,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		tmpl.Execute(w, nil)
 
 	case http.MethodPost:
+		//Dont actually need POST requests but I'll leave them just in case
 		if err := r.ParseForm(); err != nil {
 			http.Error(w, "unable to parse", http.StatusBadRequest)
 			return

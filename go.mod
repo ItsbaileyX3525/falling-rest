@@ -1,4 +1,4 @@
-module example/web-service-gin
+module falling_rest
 
 go 1.25.3
 
