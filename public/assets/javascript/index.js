@@ -23,9 +23,9 @@ function autoFormat(endpoint, data) {
     divFlex.id = "flex-get";
     divTitle.innerText = "GET";
     aEl.target = "_blank";
-    aEl.href = `/api/${endpoint}`;
+    aEl.href = `${endpoint}`;
     aEl.id = "clickable";
-    aEl.innerText = ` website/api/${endpoint}`
+    aEl.innerText = ` ${endpoint}`
     spanOpen.id = "line";
     spanClose.id = "line";
     spanOpenP.innerText = "{"
@@ -56,8 +56,7 @@ function autoFormat(endpoint, data) {
 }
 
 async function returnAPIResponse(endpoint) {
-    console.log("Fetching:", `/api/${endpoint}`)
-    const response = await fetch(`/api/${endpoint}`);
+    let response = await fetch(endpoint)
 
     if (!response.ok) {
         console.log("Something went wrong");
@@ -74,5 +73,6 @@ async function returnAPIResponse(endpoint) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const response = await returnAPIResponse("seasonalFacts")
+    const response = await returnAPIResponse("/api/seasonalFacts")
+    const response2 = await returnAPIResponse("https://api.flik.host/joke", true)
 })
