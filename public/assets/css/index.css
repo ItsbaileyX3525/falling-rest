@@ -20,6 +20,7 @@ body {
 	margin-left: 64px;
 	min-height: 100%;
 	display: flow-root;
+    overflow-x: hidden;
 }
 
 
@@ -82,7 +83,7 @@ code {
 #footer {
     width: 100%;
     display: flex;
-    position: fixed;
+    position: absolute;
     bottom: 15px;
     justify-content: center;
 }

@@ -27,6 +27,7 @@ var extensions = map[string]string{
 var endpoints = map[string]func() []byte{
 	"seasonalFacts":   api.Season,
 	"scientificFacts": api.Science,
+	"leavesImages":    api.LeafImage,
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -96,7 +97,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	api.GenRandom() //Random seed
 	http.HandleFunc("/", handler)
 
 	fmt.Println("Server started")

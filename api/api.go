@@ -7,12 +7,12 @@ import (
 	"time"
 )
 
-type SeasonalFacts struct {
+type Facts struct {
 	Fact string `json:"fact"`
 }
 
-type ScientificFacts struct {
-	Fact string `json:"fact"`
+type Images struct {
+	ImageUrl string `json:"imageUrl"`
 }
 
 type Response struct {
@@ -20,7 +20,7 @@ type Response struct {
 	Message string `json:"message"`
 }
 
-var seasonalFacts = []SeasonalFacts{
+var seasonalFacts = []Facts{
 	{Fact: "Fall occurs between summer and winter. In the Northern Hemisphere, it typically starts around September 22-23 and ends around December 21, while in the Southern Hemisphere, it runs from March to June."},
 	{Fact: "The season begins with the autumnal equinox, when day and night are roughly equal in length."},
 	{Fact: "Temperatures gradually cool down as the Earth tilts away from the Sun."},
@@ -32,7 +32,7 @@ var seasonalFacts = []SeasonalFacts{
 	{Fact: "Fall is a common season for seasonal allergies, especially due to ragweed pollen and mold spores from fallen leaves."},
 }
 
-var scientificFacts = []ScientificFacts{
+var scientificFacts = []Facts{
 	{Fact: "All objects fall at the same rate in a vacuum. Without air resistance, a feather and a bowling ball fall at exactly the same rate — 9.81m/s^2 on Earth. Galileo demonstrated this principle, later confirmed by Apollo astronauts on the Moon."},
 	{Fact: "Air resistance limits your speed (terminal velocity). When falling through air, drag counteracts gravity until forces balance. For a human in a belly-down position: ~55 m/s (≈200 km/h). For a skydiver head-down: ~90 m/s (≈320 km/h). A small insect might never reach lethal speed due to low mass and high drag."},
 	{Fact: "Acceleration remains constant, speed does not. While falling freely, you accelerate at g = 9.81 m/s^2, meaning your velocity increases by ~9.81 m/s every second until drag balances gravity."},
@@ -45,7 +45,12 @@ var scientificFacts = []ScientificFacts{
 	{Fact: "Cats survive falls from higher places better than medium heights."},
 }
 
+var leavesImages = []Images{
+	{ImageUrl: "/assets/images/leaves1.webp"},
+}
+
 func Science() []byte {
+	genRandom()
 	random := scientificFacts[rand.Intn(len(scientificFacts))]
 
 	jsonStr, err := json.Marshal(random)
@@ -62,6 +67,7 @@ func Science() []byte {
 }
 
 func Season() []byte {
+	genRandom()
 	testJson := seasonalFacts[rand.Intn(len(seasonalFacts))]
 
 	jsonStr, err := json.Marshal(testJson)
@@ -77,7 +83,24 @@ func Season() []byte {
 	return jsonStr
 }
 
-func GenRandom() {
+func LeafImage() []byte {
+	genRandom()
+	random := leavesImages[rand.Intn(len(leavesImages))]
+
+	jsonStr, err := json.Marshal(random)
+
+	if err != nil {
+		fmt.Println("Stinker happened")
+
+		jsonErr := Response{Success: false, Message: "Something went wrong"}
+		jsonStr, _ := json.Marshal(jsonErr)
+		return jsonStr
+	}
+
+	return jsonStr
+}
+
+func genRandom() {
 	rand.New(rand.NewSource(time.Now().UnixNano()))
 
 }

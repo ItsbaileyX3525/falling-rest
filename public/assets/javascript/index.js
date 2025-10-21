@@ -95,6 +95,7 @@ async function returnAPIResponse(endpoint, requestType = "GET", isBonus = false)
 document.addEventListener("DOMContentLoaded", async () => {
     await returnAPIResponse("/api/seasonalFacts")
     await returnAPIResponse("/api/scientificFacts")
+    await returnAPIResponse("/api/leavesImages")
 
     
     //Other endpoints - not related to site
