@@ -10,16 +10,6 @@ import (
 	//"strconv"
 )
 
-/*type Item struct {
-	ID int `json:"id"`
-	NAME string `json:name`
-}
-
-var testItems = []Item{
-	{ID: 1, Name: "Apple"},
-	{ID: 2, Name: "Bananae"},
-}*/
-
 var extensions = map[string]string{
 	"css":  "text/css",
 	"js":   "application/javascript",
@@ -105,6 +95,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	api.GenRandom() //Random seed
 	http.HandleFunc("/", handler)
 
 	fmt.Println("Server started")
