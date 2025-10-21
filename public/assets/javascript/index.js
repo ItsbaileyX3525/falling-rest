@@ -1,10 +1,12 @@
 console.log("Javascript loaded!"); //Keeping just to ensure javascript doesn't break
 const apiContainer = document.getElementById("api-container");
+const bonusApiContainer = document.getElementById("bonus-api-container");
 
-function autoFormat(endpoint, data, requestType) {
+function autoFormat(endpoint, data, requestType, isBonus = false) {
     const divContainer = document.createElement("div");
     const divFlex = document.createElement("div");
     const divTitle = document.createElement("div");
+    const getContainer = document.createElement("div");
     const aEl = document.createElement("a");
     const code = document.createElement("code");
     const spanOpen = document.createElement("span");
@@ -27,19 +29,28 @@ function autoFormat(endpoint, data, requestType) {
     aEl.innerText = ` ${endpoint}`
     spanOpen.id = "line";
     spanClose.id = "line";
+    spanOpen.style.color = "#7C7F93"
+    spanClose.style.color = "#7C7F93"
     spanOpenP.innerText = "{"
     spanCloseP.innerText = "}"
+    getContainer.id = "request-container"
 
     spanOpen.appendChild(spanOpenP)
     spanClose.appendChild(spanCloseP);
     code.appendChild(spanOpen);
     for (let e = 0; e < dataLines.length; e++) {
         const span = document.createElement("span");
-        const p = document.createElement("p");
+        const spanKey = document.createElement("span");
+        const spanValue = document.createElement("span");
         span.id = "line";
-        p.innerText = `    "${dataLines[e][0]}": "${dataLines[e][1]}"`;
+        spanKey.style.color = "#1E66F5";
+        spanValue.style.color = "#40A02B"
 
-        span.appendChild(p);
+        spanKey.innerText = `    "${dataLines[e][0]}":`;
+        spanValue.innerText = ` "${dataLines[e][1]}"`
+
+        span.appendChild(spanKey);
+        span.appendChild(spanValue);
         code.appendChild(span);
 
     }
@@ -47,12 +58,17 @@ function autoFormat(endpoint, data, requestType) {
     divFlex.appendChild(divTitle);
     divFlex.appendChild(aEl);
     divContainer.appendChild(divFlex);
-    divContainer.appendChild(code);
-    apiContainer.appendChild(divContainer);
+    getContainer.appendChild(code)
+    divContainer.appendChild(getContainer);
+    if (!isBonus) {
+        apiContainer.appendChild(divContainer);
+    } else {
+        bonusApiContainer.appendChild(divContainer)
+    }
 
 }
 
-async function returnAPIResponse(endpoint, requestType = "GET") {
+async function returnAPIResponse(endpoint, requestType = "GET", isBonus = false) {
     let fetchOptions = {
         method: requestType
     };
@@ -70,14 +86,18 @@ async function returnAPIResponse(endpoint, requestType = "GET") {
 
     const data = await response.json()
 
-    autoFormat(endpoint, data, requestType)
+    autoFormat(endpoint, data, requestType, isBonus)
     return data;
 
 
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const response = await returnAPIResponse("/api/seasonalFacts")
-    const response2 = await returnAPIResponse("https://api.flik.host/joke")
-    const response3 = await returnAPIResponse("https://api.flik.host/test_post", "POST")
+    await returnAPIResponse("/api/seasonalFacts")
+    await returnAPIResponse("/api/scientificFacts")
+
+    
+    //Other endpoints - not related to site
+    await returnAPIResponse("https://api.flik.host/joke", "GET", true)
+    await returnAPIResponse("https://api.flik.host/test_post", "POST", true)
 })

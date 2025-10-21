@@ -25,12 +25,8 @@ body {
 
 * {
     margin: 0;
-    word-break: break-all;
-}
+    filter: brightness(1) saturate(1);
 
-#app {
-    width: 100%;
-    height: 100%;
 }
 
 h1 {
@@ -49,10 +45,19 @@ h2 {
 
 code {
     font-family: var(--font-mono);
+    display: block;
+    white-space: pre;
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+#app {
+    width: 100%;
+    height: 100%;
 }
 
 #line {
-    white-space: pre;
+    display: block;
 }
 
 #flex-get {
@@ -60,7 +65,9 @@ code {
     flex-direction: row;
     margin-top: 16px;
     margin-bottom: 16px;
-    white-space: pre;
+    white-space: normal;
+    overflow-x: auto;
+    max-width: 100%;
 }
 
 #clickable {
@@ -69,6 +76,7 @@ code {
     cursor: pointer;
     margin-top: 2px;
     text-decoration: none;
+    white-space: nowrap;
 }
 
 #footer {
@@ -77,4 +85,17 @@ code {
     position: fixed;
     bottom: 15px;
     justify-content: center;
+}
+
+#request-container {
+    overflow-x: auto;
+    background-color: #323232ff;
+    width: 85%;
+    padding: 10px;
+	scrollbar-color: #555 #1e1e1e;
+    border-radius: 12px;
+}
+
+#request-container::-webkit-scrollbar-track {
+    background: #1e1e1e;
 }
