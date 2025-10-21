@@ -45,6 +45,22 @@ var scientificFacts = []ScientificFacts{
 	{Fact: "Cats survive falls from higher places better than medium heights."},
 }
 
+func Science() []byte {
+	random := scientificFacts[rand.Intn(len(scientificFacts))]
+
+	jsonStr, err := json.Marshal(random)
+
+	if err != nil {
+		fmt.Println("Something went wrong")
+
+		jsonErr := Response{Success: false, Message: "Something went wrong"}
+		jsonStr, _ := json.Marshal(jsonErr)
+		return jsonStr
+	}
+
+	return jsonStr
+}
+
 func Season() []byte {
 	testJson := seasonalFacts[rand.Intn(len(seasonalFacts))]
 

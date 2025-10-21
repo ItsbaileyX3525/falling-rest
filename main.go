@@ -25,7 +25,8 @@ var extensions = map[string]string{
 }
 
 var endpoints = map[string]func() []byte{
-	"seasonalFacts": api.Season,
+	"seasonalFacts":   api.Season,
+	"scientificFacts": api.Science,
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -99,5 +100,5 @@ func main() {
 	http.HandleFunc("/", handler)
 
 	fmt.Println("Server started")
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8081", nil) //Steam webhelper uses port 8080 >:(
 }
