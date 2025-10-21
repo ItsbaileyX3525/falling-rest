@@ -1,7 +1,7 @@
 console.log("Javascript loaded!"); //Keeping just to ensure javascript doesn't break
 const apiContainer = document.getElementById("api-container");
 
-function autoFormat(endpoint, data) {
+function autoFormat(endpoint, data, requestType) {
     const divContainer = document.createElement("div");
     const divFlex = document.createElement("div");
     const divTitle = document.createElement("div");
@@ -14,14 +14,13 @@ function autoFormat(endpoint, data) {
     const dataLines = []
 
     for (const [key, value] of Object.entries(data)) {
-        console.log(key, value);
         const data = [key, value]
         dataLines.push(data);
     }
 
     divContainer.id = "get-container"
     divFlex.id = "flex-get";
-    divTitle.innerText = "GET";
+    divTitle.innerText = requestType;
     aEl.target = "_blank";
     aEl.href = `${endpoint}`;
     aEl.id = "clickable";
@@ -35,11 +34,9 @@ function autoFormat(endpoint, data) {
     spanClose.appendChild(spanCloseP);
     code.appendChild(spanOpen);
     for (let e = 0; e < dataLines.length; e++) {
-        console.log("Something happening")
         const span = document.createElement("span");
         const p = document.createElement("p");
         span.id = "line";
-        console.log(dataLines, dataLines[e][0], dataLines[e][1]);
         p.innerText = `    "${dataLines[e][0]}": "${dataLines[e][1]}"`;
 
         span.appendChild(p);
@@ -55,8 +52,16 @@ function autoFormat(endpoint, data) {
 
 }
 
-async function returnAPIResponse(endpoint) {
-    let response = await fetch(endpoint)
+async function returnAPIResponse(endpoint, requestType = "GET") {
+    let fetchOptions = {
+        method: requestType
+    };
+    if (requestType !== "GET") {
+        fetchOptions.headers = {
+            'Content-Type': 'application/json'
+        };
+    }
+    let response = await fetch(endpoint, fetchOptions)
 
     if (!response.ok) {
         console.log("Something went wrong");
@@ -65,8 +70,7 @@ async function returnAPIResponse(endpoint) {
 
     const data = await response.json()
 
-    console.log(data)
-    autoFormat(endpoint, data)
+    autoFormat(endpoint, data, requestType)
     return data;
 
 
@@ -74,5 +78,6 @@ async function returnAPIResponse(endpoint) {
 
 document.addEventListener("DOMContentLoaded", async () => {
     const response = await returnAPIResponse("/api/seasonalFacts")
-    const response2 = await returnAPIResponse("https://api.flik.host/joke", true)
+    const response2 = await returnAPIResponse("https://api.flik.host/joke")
+    const response3 = await returnAPIResponse("https://api.flik.host/test_post", "POST")
 })
