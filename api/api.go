@@ -47,6 +47,15 @@ var scientificFacts = []Facts{
 
 var leavesImages = []Images{
 	{ImageUrl: "/assets/images/leaves1.webp"},
+	{ImageUrl: "/assets/images/leaves2.jpg"},
+	{ImageUrl: "/assets/images/leaves3.jpg"},
+	{ImageUrl: "/assets/images/leaves4.jpg"},
+	{ImageUrl: "/assets/images/leaves5.jpg"},
+	{ImageUrl: "/assets/images/leaves6.webp"},
+	{ImageUrl: "/assets/images/leaves7.jpg"},
+	{ImageUrl: "/assets/images/leaves8.webp"},
+	{ImageUrl: "/assets/images/leaves9.jpg"},
+	{ImageUrl: "/assets/images/leaves10.webp"},
 }
 
 func Science() []byte {

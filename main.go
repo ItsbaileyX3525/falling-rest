@@ -68,15 +68,17 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	suffix := strings.Split(fullUrl, ".")
 
 	//Handle files
-	if strings.HasSuffix(fullUrl, ".js") || strings.HasSuffix(fullUrl, ".css") || strings.HasSuffix(fullUrl, ".ico") {
-		data, err := os.ReadFile(fmt.Sprintf("public%s", fullUrl))
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			w.Header().Set("Content-Type", fmt.Sprintf("%s", extensions[suffix[1]]))
-			w.Write(data)
+	if len(suffix) > 1 {
+		if strings.HasSuffix(fullUrl, "."+suffix[1]) {
+			data, err := os.ReadFile(fmt.Sprintf("public%s", fullUrl))
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				w.Header().Set("Content-Type", fmt.Sprintf("%s", extensions[suffix[1]]))
+				w.Write(data)
+			}
+			return
 		}
-		return
 	}
 
 	//Handle API endpoints

@@ -2,7 +2,19 @@ console.log("Javascript loaded!"); //Keeping just to ensure javascript doesn't b
 const apiContainer = document.getElementById("api-container");
 const bonusApiContainer = document.getElementById("bonus-api-container");
 
-function autoFormat(endpoint, data, requestType, isBonus = false) {
+function createLoadingContainer(endpoint, requestType = "GET", isBonus = false) {
+    const divContainer = document.createElement("div");
+    divContainer.id = "get-container";
+    divContainer.innerText = "Loading...";
+    if (!isBonus) {
+        apiContainer.appendChild(divContainer);
+    } else {
+        bonusApiContainer.appendChild(divContainer);
+    }
+    return divContainer;
+}
+
+function autoFormat(endpoint, data, requestType, isBonus = false, existingContainer = null) {
     const divContainer = document.createElement("div");
     const divFlex = document.createElement("div");
     const divTitle = document.createElement("div");
@@ -20,7 +32,17 @@ function autoFormat(endpoint, data, requestType, isBonus = false) {
         dataLines.push(data);
     }
 
-    divContainer.id = "get-container"
+    let containerEl = existingContainer;
+    if (!containerEl) {
+        containerEl = divContainer;
+        containerEl.id = "get-container";
+        containerEl.innerText = "Loading...";
+        if (!isBonus) {
+            apiContainer.appendChild(containerEl);
+        } else {
+            bonusApiContainer.appendChild(containerEl);
+        }
+    }
     divFlex.id = "flex-get";
     divTitle.innerText = requestType;
     aEl.target = "_blank";
@@ -54,18 +76,13 @@ function autoFormat(endpoint, data, requestType, isBonus = false) {
         code.appendChild(span);
 
     }
+    containerEl.innerText = "";
     code.appendChild(spanClose);
     divFlex.appendChild(divTitle);
     divFlex.appendChild(aEl);
-    divContainer.appendChild(divFlex);
+    containerEl.appendChild(divFlex);
     getContainer.appendChild(code)
-    divContainer.appendChild(getContainer);
-    if (!isBonus) {
-        apiContainer.appendChild(divContainer);
-    } else {
-        bonusApiContainer.appendChild(divContainer)
-    }
-
+    containerEl.appendChild(getContainer);
 }
 
 async function returnAPIResponse(endpoint, requestType = "GET", isBonus = false) {
@@ -77,7 +94,16 @@ async function returnAPIResponse(endpoint, requestType = "GET", isBonus = false)
             'Content-Type': 'application/json'
         };
     }
-    let response = await fetch(endpoint, fetchOptions)
+    const loadingEl = createLoadingContainer(endpoint, requestType, isBonus);
+
+    let response;
+    try {
+        response = await fetch(endpoint, fetchOptions)
+    } catch (err) {
+        console.log("Network error:", err);
+        loadingEl.innerText = "Network error";
+        return false;
+    }
 
     if (!response.ok) {
         console.log("Something went wrong");
@@ -86,7 +112,7 @@ async function returnAPIResponse(endpoint, requestType = "GET", isBonus = false)
 
     const data = await response.json()
 
-    autoFormat(endpoint, data, requestType, isBonus)
+    autoFormat(endpoint, data, requestType, isBonus, loadingEl)
     return data;
 
 

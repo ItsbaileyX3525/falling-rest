@@ -83,8 +83,9 @@ code {
 #footer {
     width: 100%;
     display: flex;
-    position: absolute;
-    bottom: 15px;
+    bottom: 0;
+    margin-top: 32px;
+    margin-bottom: 16px;
     justify-content: center;
 }
 
