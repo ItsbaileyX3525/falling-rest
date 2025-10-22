@@ -1,12 +1,17 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"falling_rest/api"
 	"fmt"
 	"html/template"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
+
+	"github.com/joho/godotenv"
 	//"strconv"
 )
 
@@ -28,6 +33,34 @@ var endpoints = map[string]func() []byte{
 	"seasonalFacts":   api.Season,
 	"scientificFacts": api.Science,
 	"leavesImages":    api.LeafImage,
+}
+
+var vars = map[string]interface{}{}
+
+// How the fuck did I get this working...
+func parseHTML(content []byte) string { //Fuck if I know what im doing here but hey worth a shot
+	reader := bytes.NewReader(content)
+	scanner := bufio.NewScanner(reader)
+	var result string
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.Contains(line, "{{") {
+			variableName := strings.TrimSpace(strings.Split(strings.Split(line, "server.")[1], "}}")[0])
+			if ptr, ok := vars[variableName].(*string); ok {
+				parsed := strings.ReplaceAll(line, variableName, *ptr)
+				parsedAgain := strings.ReplaceAll(parsed, "{{", "")
+				parsedAgain2 := strings.ReplaceAll(parsedAgain, "server.", "")
+				parsedAgain3 := strings.ReplaceAll(parsedAgain2, "}}", "")
+				result += parsedAgain3 + "\n"
+			} else {
+				fmt.Println("variable not a string")
+				result += line + "\n"
+			}
+		} else {
+			result += line + "\n"
+		}
+	}
+	return result
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -72,8 +105,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		//fmt.Println(err)
 		content, err = os.ReadFile("public/404.html")
 	}
-
-	tmpl := template.Must(template.New("index").Parse(string(content)))
+	var parsed string = parseHTML(content)
+	tmpl := template.Must(template.New("index").Parse(parsed))
 
 	switch r.Method {
 
@@ -96,7 +129,18 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func loadEnv() {
+	wd, _ := os.Getwd()
+	godotenv.Load(filepath.Join(wd, ".env"))
+}
+
 func main() {
+	loadEnv()
+
+	var websiteName string = os.Getenv("websiteName")
+	fmt.Println(websiteName)
+	vars["websiteName"] = &websiteName
+
 	http.HandleFunc("/", handler)
 
 	fmt.Println("Server started")
