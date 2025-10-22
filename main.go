@@ -29,10 +29,11 @@ var extensions = map[string]string{
 	"ogg":  "application/ogg", //Why?
 }
 
-var endpoints = map[string]func() []byte{
+var endpoints = map[string]func([]string) []byte{
 	"seasonalFacts":   api.Season,
 	"scientificFacts": api.Science,
 	"leavesImages":    api.LeafImage,
+	"motionImages":    api.MotionImage,
 }
 
 var vars = map[string]interface{}{}
@@ -74,7 +75,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				fmt.Println(err)
 			} else {
-				w.Header().Set("Content-Type", fmt.Sprintf("%s", extensions[suffix[1]]))
+				w.Header().Set("Content-Type", extensions[suffix[1]])
 				w.Write(data)
 			}
 			return
@@ -83,12 +84,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	//Handle API endpoints
 	urlSplit := strings.Split(fullUrl, "/")
-	if urlSplit[1] == "api" {
+	if strings.TrimSpace(urlSplit[1]) == "api" {
 		apiEndpoint := urlSplit[2]
-		if _, ok := endpoints[apiEndpoint]; !ok {
+		params := strings.Split(apiEndpoint, "?")
+		if _, ok := endpoints[params[0]]; !ok {
 			return
 		}
-		data := endpoints[apiEndpoint]()
+		data := endpoints[params[0]](params[1:])
 
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(data)
@@ -105,7 +107,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	content, err := os.ReadFile(fmt.Sprintf("public%s.html", fullUrl))
 	if err != nil {
 		//fmt.Println(err)
-		content, err = os.ReadFile("public/404.html")
+		content, _ = os.ReadFile("public/404.html")
 	}
 	var parsed string = parseHTML(content)
 	tmpl := template.Must(template.New("index").Parse(parsed))
@@ -140,7 +142,6 @@ func main() {
 	loadEnv()
 
 	var websiteName string = os.Getenv("websiteName")
-	fmt.Println(websiteName)
 	vars["websiteName"] = &websiteName
 
 	http.HandleFunc("/", handler)

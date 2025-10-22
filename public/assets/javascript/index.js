@@ -122,6 +122,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await returnAPIResponse("/api/seasonalFacts")
     await returnAPIResponse("/api/scientificFacts")
     await returnAPIResponse("/api/leavesImages")
+    await returnAPIResponse("/api/motionImages?noburger")
 
     
     //Other endpoints - not related to site

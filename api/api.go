@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
+	"slices"
 	"time"
 )
 
@@ -46,19 +47,30 @@ var scientificFacts = []Facts{
 }
 
 var leavesImages = []Images{
-	{ImageUrl: "/assets/images/leaves1.webp"},
-	{ImageUrl: "/assets/images/leaves2.jpg"},
-	{ImageUrl: "/assets/images/leaves3.jpg"},
-	{ImageUrl: "/assets/images/leaves4.jpg"},
-	{ImageUrl: "/assets/images/leaves5.jpg"},
-	{ImageUrl: "/assets/images/leaves6.webp"},
-	{ImageUrl: "/assets/images/leaves7.jpg"},
-	{ImageUrl: "/assets/images/leaves8.webp"},
-	{ImageUrl: "/assets/images/leaves9.jpg"},
-	{ImageUrl: "/assets/images/leaves10.webp"},
+	{ImageUrl: "/assets/images/leaves/leaves1.webp"},
+	{ImageUrl: "/assets/images/leaves/leaves2.jpg"},
+	{ImageUrl: "/assets/images/leaves/leaves3.jpg"},
+	{ImageUrl: "/assets/images/leaves/leaves4.jpg"},
+	{ImageUrl: "/assets/images/leaves/leaves5.jpg"},
+	{ImageUrl: "/assets/images/leaves/leaves6.webp"},
+	{ImageUrl: "/assets/images/leaves/leaves7.jpg"},
+	{ImageUrl: "/assets/images/leaves/leaves8.webp"},
+	{ImageUrl: "/assets/images/leaves/leaves9.jpg"},
+	{ImageUrl: "/assets/images/leaves/leaves10.webp"},
 }
 
-func Science() []byte {
+var motionImages = []Images{
+	{ImageUrl: "/assets/images/motion/cheese.jpg"},
+	{ImageUrl: "/assets/images/motion/motion1.webp"},
+	{ImageUrl: "/assets/images/motion/motion2.jpg"},
+	{ImageUrl: "/assets/images/motion/motion3.jpg"},
+	{ImageUrl: "/assets/images/motion/motion4.jpg"},
+	{ImageUrl: "/assets/images/motion/motion5.jpg"},
+	{ImageUrl: "/assets/images/motion/motion6.webp"},
+	{ImageUrl: "/assets/images/motion/motion7.webp"},
+}
+
+func Science(params []string) []byte {
 	genRandom()
 	random := scientificFacts[rand.Intn(len(scientificFacts))]
 
@@ -75,7 +87,7 @@ func Science() []byte {
 	return jsonStr
 }
 
-func Season() []byte {
+func Season(params []string) []byte {
 	genRandom()
 	testJson := seasonalFacts[rand.Intn(len(seasonalFacts))]
 
@@ -92,9 +104,32 @@ func Season() []byte {
 	return jsonStr
 }
 
-func LeafImage() []byte {
+func LeafImage(params []string) []byte {
 	genRandom()
 	random := leavesImages[rand.Intn(len(leavesImages))]
+
+	jsonStr, err := json.Marshal(random)
+
+	if err != nil {
+		fmt.Println("Stinker happened")
+
+		jsonErr := Response{Success: false, Message: "Something went wrong"}
+		jsonStr, _ := json.Marshal(jsonErr)
+		return jsonStr
+	}
+
+	return jsonStr
+}
+
+func MotionImage(params []string) []byte {
+	genRandom()
+	var random Images
+	if slices.Contains(params, "noburger") {
+		newRand := motionImages[1:]
+		random = newRand[rand.Intn(len(newRand))]
+	} else {
+		random = motionImages[rand.Intn(len(motionImages))]
+	}
 
 	jsonStr, err := json.Marshal(random)
 
