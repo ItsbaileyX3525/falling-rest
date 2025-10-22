@@ -55,7 +55,11 @@ func parseHTML(content []byte) string { //Fuck if I know what im doing here but 
 				result += parsedAgain3 + "\n"
 			} else {
 				fmt.Println("variable not a string")
-				result += line + "\n"
+				parsed := strings.ReplaceAll(line, variableName, "Undefined")
+				parsedAgain := strings.ReplaceAll(parsed, "{{", "")
+				parsedAgain2 := strings.ReplaceAll(parsedAgain, "server.", "")
+				parsedAgain3 := strings.ReplaceAll(parsedAgain2, "}}", "")
+				result += parsedAgain3 + "\n"
 			}
 		} else {
 			result += line + "\n"
@@ -142,7 +146,9 @@ func main() {
 	loadEnv()
 
 	var websiteName string = os.Getenv("websiteName")
+	var websiteVersion string = os.Getenv("websiteVersion")
 	vars["websiteName"] = &websiteName
+	vars["websiteVersion"] = &websiteVersion
 
 	http.HandleFunc("/", handler)
 

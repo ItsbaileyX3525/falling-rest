@@ -101,3 +101,9 @@ code {
 #request-container::-webkit-scrollbar-track {
     background: #1e1e1e;
 }
+
+#redirect {
+    font-size: medium;
+    text-decoration: none;
+    color: salmon;
+}
