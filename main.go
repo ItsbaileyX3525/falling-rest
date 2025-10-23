@@ -17,7 +17,7 @@ import (
 
 var extensions = map[string]string{
 	"css":  "text/css",
-	"js":   "application/javascript",
+	"js":   "text/javascript",
 	"ico":  "image/x-icon",
 	"png":  "image/png",
 	"gif":  "image/gif",
@@ -34,12 +34,14 @@ var endpoints = map[string]func([]string) []byte{
 	"scientificFacts": api.Science,
 	"leavesImages":    api.LeafImage,
 	"motionImages":    api.MotionImage,
+	"decode":          api.DecodeHash,
 }
 
 var authRoutes = map[string]http.HandlerFunc{
 	"register": api.Register,
 	"login":    api.Login,
 	"logout":   api.Logout,
+	"me":       api.Me,
 }
 
 var vars = map[string]interface{}{}

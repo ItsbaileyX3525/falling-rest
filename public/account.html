@@ -4,13 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/assets/css/account.css">
+  <link rel="stylesheet" href="/assets/css/api.css">
   <title>Account</title>
 </head>
 <body>
   <div id="app">
     <a id="home-btn" href="/">Home</a>
-    <div id="username">WELCOME {{ server.test }}</div>
+    <div id="username-container">WELCOME <span id="username">username</span></div>
     <p>Here you can find your API key: {{ server.APIKey }}</p>
+    <div style="margin-top: 48px;">
+      <h2>Available endpoints - That work with your API key</h2>
+      <div id="api-container">
+      </div>
+    </div>
   </div>
 </body>
+<script type="module" src="/assets/javascript/account.js"></script>
 </html>

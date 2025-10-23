@@ -17,9 +17,9 @@ html {
 body {
 	margin: 0;
 	padding: 0;
-	margin-left: 64px;
-	min-height: 100%;
-	display: flow-root;
+    margin-left: 64px;
+    min-height: 100%;
+    display: flow-root;
     overflow-x: hidden;
 }
 
@@ -27,6 +27,7 @@ body {
 * {
     margin: 0;
     filter: brightness(1) saturate(1);
+    box-sizing: border-box;
 
 }
 
@@ -48,24 +49,44 @@ body {
 
 #form-container {
     display: flex;
-    transform: translateX(15%);
     justify-content: center;
+    align-items: center;
     background-color: purple;
-    max-width: 80%;
-    padding-top: 20%;
-    padding-bottom: 20%;
-    margin-top: 32px;
-    height: 80%;
+    border-radius: 32px;
+    width: min(720px, 80%);
+    margin: 120px auto;
+    padding: 2rem;
 }
 
 #form {
     display: flex;
     flex-direction: column;
-    min-width: 80%;
+    width: 100%;
+    max-width: 420px;
 }
 
 #submit-btn {
-    width: 20%;
+    width: auto;
     align-self: center;
     margin-top: 10px;
+    padding: .5rem 1rem;
+    border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+    body {
+        margin-left: 16px;
+    }
+
+    #form-container {
+        width: calc(100% - 32px);
+        margin-top: 48px;
+        padding: 1rem;
+        border-radius: 16px;
+    }
+
+    #submit-btn {
+        width: 100%;
+        align-self: stretch;
+    }
 }

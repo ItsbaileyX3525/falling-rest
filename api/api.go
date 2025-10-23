@@ -1,10 +1,13 @@
 package api
 
 import (
+	"encoding/base32"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"math/rand"
 	"slices"
+	"strings"
 	"time"
 )
 
@@ -78,6 +81,72 @@ func Science(params []string) []byte {
 
 	if err != nil {
 		fmt.Println("Something went wrong")
+
+		jsonErr := Response{Success: false, Message: "Something went wrong"}
+		jsonStr, _ := json.Marshal(jsonErr)
+		return jsonStr
+	}
+
+	return jsonStr
+}
+
+func DecodeHash(params []string) []byte {
+	var decoded []byte
+	var err error
+
+	decodeBase64 := func(hash string) []byte {
+		decoded, err = base64.StdEncoding.DecodeString(hash)
+		if err != nil {
+			fmt.Println("Something went wrong")
+			return []byte("false")
+		}
+		return decoded
+	}
+
+	decodeBase32 := func(hash string) []byte {
+		decoded, err = base32.StdEncoding.DecodeString(hash)
+		if err != nil {
+			fmt.Println("Something went wrong")
+			return []byte("false")
+		}
+		return decoded
+	}
+
+	if len(params) == 3 {
+
+		var hash string
+		var hashType string
+
+		if !strings.Contains(params[2], "apiKey") {
+			jsonErr := Response{Success: false, Message: "APIKey needs to be last appended item"}
+			jsonStr, _ := json.Marshal(jsonErr)
+			return jsonStr
+		}
+
+		if strings.Contains(params[0], "input") {
+			hash = strings.Replace(params[0], "input=", "", -1)
+			hashType = strings.Replace(params[1], "type=", "", -1)
+		} else {
+			hashType = strings.Replace(params[0], "type=", "", -1)
+			hash = strings.Replace(params[1], "input=", "", -1)
+		}
+
+		if hashType == "base64" {
+			decodeBase64(hash)
+		} else if hashType == "base32" {
+			decodeBase32(hash)
+		}
+	} else {
+		jsonErr := Response{Success: false, Message: "Something went wrong"}
+		jsonStr, _ := json.Marshal(jsonErr)
+		return jsonStr
+	}
+
+	resp := map[string]string{"decoded": string(decoded)}
+	jsonStr, err := json.Marshal(resp)
+
+	if err != nil {
+		fmt.Println("Error occured!")
 
 		jsonErr := Response{Success: false, Message: "Something went wrong"}
 		jsonStr, _ := json.Marshal(jsonErr)

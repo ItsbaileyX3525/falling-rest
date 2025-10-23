@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"sync"
 	"time"
@@ -76,6 +77,39 @@ func findUserByEmail(email string) *User {
 	return nil
 }
 
+func findUserByID(id int) *User {
+	mu.RLock()
+	defer mu.RUnlock()
+	return users[id]
+}
+
+func CurrentUser(r *http.Request) (*User, error) {
+	cookie, err := r.Cookie("session")
+	if err != nil {
+		return nil, err
+	}
+
+	session := lookupSession(cookie.Value)
+	if session == nil || !session.IsValid() {
+		return nil, errors.New("invalid or expired session")
+	}
+
+	user := findUserByID(session.UserID)
+	if user == nil {
+		return nil, errors.New("user not found")
+	}
+
+	return user, nil
+}
+
+func EmailFromRequest(r *http.Request) (string, error) {
+	u, err := CurrentUser(r)
+	if err != nil {
+		return "", err
+	}
+	return u.Email, nil
+}
+
 func storeUser(email, hashedPassword string) int {
 	mu.Lock()
 	defer mu.Unlock()
@@ -136,6 +170,22 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	userID := storeUser(req.Email, string(hashedPassword))
+
+	token, err := generateSessionToken()
+	if err != nil {
+		http.Error(w, "Error generating session", http.StatusInternalServerError)
+		return
+	}
+
+	storeSession(token, userID, 24*time.Hour)
+
+	http.SetCookie(w, &http.Cookie{
+		Name:     "session",
+		Value:    token,
+		Path:     "/",
+		Expires:  time.Now().Add(24 * time.Hour),
+		HttpOnly: true,
+	})
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
@@ -230,4 +280,25 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		ctx := context.WithValue(r.Context(), "userID", session.UserID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
+
+func Me(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	email, err := EmailFromRequest(r)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(AuthResponse{Success: false, Message: "unauthorized"})
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(struct {
+		Success bool   `json:"success"`
+		Email   string `json:"email"`
+	}{Success: true, Email: email})
 }

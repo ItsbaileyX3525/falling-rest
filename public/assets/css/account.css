@@ -43,10 +43,11 @@ body {
     padding-block: 4px;
     border-radius: 32px;
     background-color: lightblue;
+    z-index: 32;
     color: black;
 }
 
-#username {
+#username-container {
     margin-top: 32px;
     font-size: x-large;
 }

@@ -1,0 +1,43 @@
+code {
+    font-family: var(--font-mono);
+    display: block;
+    white-space: pre;
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+#request-container {
+    overflow-x: auto;
+    background-color: #323232ff;
+    width: 85%;
+    padding: 10px;
+	scrollbar-color: #555 #1e1e1e;
+    border-radius: 12px;
+}
+
+#request-container::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+#line {
+    display: block;
+}
+
+#flex-get {
+    display: flex;
+    flex-direction: row;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    white-space: normal;
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+#clickable {
+    color: #fb64b6;
+    font-size: small;
+    cursor: pointer;
+    margin-top: 2px;
+    text-decoration: none;
+    white-space: nowrap;
+}
