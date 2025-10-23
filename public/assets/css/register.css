@@ -73,6 +73,17 @@ body {
     border-radius: 8px;
 }
 
+#return-btn {
+    position: absolute;
+    margin-top: 32px;
+    background-color: lightblue;
+    color: black;
+    padding-inline: 8px;
+    padding-block: 6px;
+    border-radius: 32px;
+    text-decoration: none;
+}
+
 @media (max-width: 600px) {
     body {
         margin-left: 16px;

@@ -30,12 +30,9 @@ form.addEventListener("submit", async (e) => {
     const data = await response.json()
 
     if (data.success || data.success === 'true') {
+        window.localStorage.setItem("APIKey", data.api_key)
         window.location.href = "/account"
     } else {
         console.log(data.message)
     }
-})
-
-document.addEventListener("DOMContentLoaded", async () => {
-    
 })

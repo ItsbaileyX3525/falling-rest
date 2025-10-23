@@ -35,16 +35,19 @@ body {
     height: 100%;
 }
 
-#home-btn {
+#navbar {
     position: absolute;
     right: 15px;
+    z-index: 32;
+}
+
+#navbar-btn {
     text-decoration: none;
     padding-inline: 6px;
     padding-block: 4px;
     border-radius: 32px;
-    background-color: lightblue;
-    z-index: 32;
     color: black;
+    background-color: lightblue;
 }
 
 #username-container {

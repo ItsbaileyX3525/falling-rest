@@ -9,9 +9,13 @@
 </head>
 <body>
   <div id="app">
-    <a id="home-btn" href="/">Home</a>
+    <div id="navbar">
+      <a id="navbar-btn" href="/">Home</a>
+      <a id="navbar-btn" href="/login">Login</a>      
+      <a id="navbar-btn" href="/register">Register</a>      
+    </div>
     <div id="username-container">WELCOME <span id="username">username</span></div>
-    <p>Here you can find your API key: {{ server.APIKey }}</p>
+    <p>Here you can find your API key: <span id="api-key">HERE</span></p>
     <div style="margin-top: 48px;">
       <h2>Available endpoints - That work with your API key</h2>
       <div id="api-container">

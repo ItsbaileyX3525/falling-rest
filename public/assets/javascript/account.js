@@ -1,6 +1,6 @@
 const username = document.getElementById("username");
 import { returnAPIResponse } from "./api.js";
-
+const APIKeyEl = document.getElementById("api-key")
 
 async function fetchEmail() {
     const response = await fetch("/auth/me", {
@@ -13,7 +13,7 @@ async function fetchEmail() {
 
     if (!response.ok) {
         console.log("Something went wrong fetching email");
-        return
+        return "Not logged in"
     }
 
     const data = await response.json()
@@ -28,6 +28,7 @@ async function fetchEmail() {
 
 document.addEventListener("DOMContentLoaded", async () => {
     username.innerText = await fetchEmail()
-
-    await returnAPIResponse("/api/decode?input=dGVzdA==?type=base64?apiKey=abc123");
+    const APIKey = window.localStorage.getItem("APIKey")
+    APIKeyEl.innerText = APIKey
+    await returnAPIResponse(`/api/decode?input=dGVzdA==?type=base64?apiKey=${APIKey}`);
 })

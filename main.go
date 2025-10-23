@@ -62,7 +62,6 @@ func parseHTML(content []byte) string { //Fuck if I know what im doing here but 
 				parsedAgain3 := strings.ReplaceAll(parsedAgain2, "}}", "")
 				result += parsedAgain3 + "\n"
 			} else {
-				fmt.Println("variable not a string")
 				parsed := strings.ReplaceAll(line, variableName, "Undefined")
 				parsedAgain := strings.ReplaceAll(parsed, "{{", "")
 				parsedAgain2 := strings.ReplaceAll(parsedAgain, "server.", "")
@@ -101,6 +100,25 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			apiEndpoint := urlSplit[2]
 			params := strings.Split(apiEndpoint, "?")
 			if _, ok := endpoints[params[0]]; ok {
+				if params[0] == "decode" {
+					apiKey := ""
+					for _, param := range params {
+						if strings.HasPrefix(param, "apiKey=") {
+							apiKey = strings.TrimPrefix(param, "apiKey=")
+							break
+						}
+					}
+					if apiKey == "" {
+						http.Error(w, "API key required", http.StatusUnauthorized)
+						return
+					}
+					_, err := api.ValidateAPIKey(apiKey)
+					if err != nil {
+						http.Error(w, "Invalid API key", http.StatusUnauthorized)
+						return
+					}
+				}
+
 				data := endpoints[params[0]](params[1:])
 				w.Header().Set("Content-Type", "application/json")
 				w.Write(data)

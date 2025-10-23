@@ -24,6 +24,7 @@ type User struct {
 	ID       int    `json:"id"`
 	Email    string `json:"email"`
 	Password string `json:"-"`
+	APIKey   string `json:"api_key,omitempty"`
 }
 
 type Session struct {
@@ -46,6 +47,7 @@ type AuthResponse struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
 	UserID  int    `json:"user_id,omitempty"`
+	APIKey  string `json:"api_key,omitempty"`
 }
 
 func (s *Session) IsValid() bool {
@@ -59,6 +61,14 @@ func lookupSession(token string) *Session {
 }
 
 func generateSessionToken() (string, error) {
+	b := make([]byte, 32)
+	if _, err := rand.Read(b); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(b), nil
+}
+
+func generateAPIKey() (string, error) {
 	b := make([]byte, 32)
 	if _, err := rand.Read(b); err != nil {
 		return "", err
@@ -113,12 +123,14 @@ func EmailFromRequest(r *http.Request) (string, error) {
 func storeUser(email, hashedPassword string) int {
 	mu.Lock()
 	defer mu.Unlock()
+	apiKey, _ := generateAPIKey()
 	id := nextID
 	nextID++
 	users[id] = &User{
 		ID:       id,
 		Email:    email,
 		Password: hashedPassword,
+		APIKey:   apiKey,
 	}
 	return id
 }
@@ -137,6 +149,17 @@ func deleteSession(token string) {
 	mu.Lock()
 	defer mu.Unlock()
 	delete(sessions, token)
+}
+
+func ValidateAPIKey(apiKey string) (*User, error) {
+	mu.RLock()
+	defer mu.RUnlock()
+	for _, u := range users {
+		if u.APIKey == apiKey {
+			return u, nil
+		}
+	}
+	return nil, errors.New("invalid API key")
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
@@ -187,9 +210,10 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 	})
 
+	user := findUserByID(userID)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(AuthResponse{Success: true, Message: "Account created", UserID: userID})
+	json.NewEncoder(w).Encode(AuthResponse{Success: true, Message: "Account created", UserID: userID, APIKey: user.APIKey})
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
