@@ -107,3 +107,24 @@ code {
     text-decoration: none;
     color: salmon;
 }
+
+#account-btn {
+    position: absolute;
+    right: 40px;
+    background-color: lightblue;
+    color: black;
+    padding-block: 6px;
+    padding-inline: 4px;
+    border-radius: 32px;
+    cursor: pointer;
+    z-index: 32;
+    text-decoration: none;
+}
+
+#account-btn:hover {
+    transform: translateY(-1px);
+}
+
+#account-btn:active {
+    transform: translateY(1px);
+}

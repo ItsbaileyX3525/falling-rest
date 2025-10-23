@@ -36,6 +36,12 @@ var endpoints = map[string]func([]string) []byte{
 	"motionImages":    api.MotionImage,
 }
 
+var authRoutes = map[string]http.HandlerFunc{
+	"register": api.Register,
+	"login":    api.Login,
+	"logout":   api.Logout,
+}
+
 var vars = map[string]interface{}{}
 
 // How the fuck did I get this working...
@@ -88,16 +94,31 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	//Handle API endpoints
 	urlSplit := strings.Split(fullUrl, "/")
-	if strings.TrimSpace(urlSplit[1]) == "api" {
-		apiEndpoint := urlSplit[2]
-		params := strings.Split(apiEndpoint, "?")
-		if _, ok := endpoints[params[0]]; !ok {
-			return
+	if len(urlSplit) > 1 && strings.TrimSpace(urlSplit[1]) == "api" {
+		if len(urlSplit) > 2 {
+			apiEndpoint := urlSplit[2]
+			params := strings.Split(apiEndpoint, "?")
+			if _, ok := endpoints[params[0]]; ok {
+				data := endpoints[params[0]](params[1:])
+				w.Header().Set("Content-Type", "application/json")
+				w.Write(data)
+				return
+			}
 		}
-		data := endpoints[params[0]](params[1:])
+		http.Error(w, "API endpoint not found", http.StatusNotFound)
+		return
+	}
 
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(data)
+	//Handle auth endpoints
+	if len(urlSplit) > 1 && strings.TrimSpace(urlSplit[1]) == "auth" {
+		if len(urlSplit) > 2 {
+			authEndpoint := urlSplit[2]
+			if handler, ok := authRoutes[authEndpoint]; ok {
+				handler(w, r)
+				return
+			}
+		}
+		http.Error(w, "Auth endpoint not found", http.StatusNotFound)
 		return
 	}
 
@@ -147,9 +168,10 @@ func main() {
 
 	var websiteName string = os.Getenv("websiteName")
 	var websiteVersion string = os.Getenv("websiteVersion")
+	var test string = "placeholder"
 	vars["websiteName"] = &websiteName
 	vars["websiteVersion"] = &websiteVersion
-
+	vars["test"] = &test
 	http.HandleFunc("/", handler)
 
 	fmt.Println("Server started")
