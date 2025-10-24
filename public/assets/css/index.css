@@ -23,11 +23,9 @@ body {
     overflow-x: hidden;
 }
 
-
 * {
     margin: 0;
     filter: brightness(1) saturate(1);
-
 }
 
 h1 {
@@ -43,8 +41,6 @@ h2 {
   font-weight: 500;
   font-style: normal;
 }
-
-
 
 #app {
     width: 100%;

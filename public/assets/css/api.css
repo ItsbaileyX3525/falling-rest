@@ -19,6 +19,14 @@ code {
     background: #1e1e1e;
 }
 
+#get-container::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+#get-container {
+	scrollbar-color: #555 #1e1e1e;
+}
+
 #line {
     display: block;
 }

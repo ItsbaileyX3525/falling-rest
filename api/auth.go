@@ -258,7 +258,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	})
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(AuthResponse{Success: true, Message: "Logged in successfully", UserID: user.ID})
+	json.NewEncoder(w).Encode(AuthResponse{Success: true, Message: "Logged in successfully", UserID: user.ID, APIKey: user.APIKey})
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {

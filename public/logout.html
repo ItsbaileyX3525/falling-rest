@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+</body>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const response = await fetch("/auth/logout", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+        "Accept" : "application/json"
+    }
+  })
+  
+  if (!response) {
+    console.log("Something went wrong")
+    return
+  }
+
+  const data = await response.json()
+
+  if (data.success || data.success === 'true') {
+    window.location.href = "/login"
+  } else {
+    console.log("Unable to log you out.")
+  }
+})
+</script>
+</html>

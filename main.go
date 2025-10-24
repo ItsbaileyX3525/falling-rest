@@ -35,6 +35,7 @@ var endpoints = map[string]func([]string) []byte{
 	"leavesImages":    api.LeafImage,
 	"motionImages":    api.MotionImage,
 	"decode":          api.DecodeHash,
+	"fallPeople":      api.People,
 }
 
 var authRoutes = map[string]http.HandlerFunc{
@@ -100,26 +101,40 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			apiEndpoint := urlSplit[2]
 			params := strings.Split(apiEndpoint, "?")
 			if _, ok := endpoints[params[0]]; ok {
-				if params[0] == "decode" {
+				endpointName := params[0]
+
+				if endpointName == "decode" || endpointName == "fallPeople" {
 					apiKey := ""
-					for _, param := range params {
-						if strings.HasPrefix(param, "apiKey=") {
-							apiKey = strings.TrimPrefix(param, "apiKey=")
-							break
+					if len(params) > 1 {
+						for _, param := range params[1:] {
+							if strings.HasPrefix(param, "apiKey=") {
+								apiKey = strings.TrimPrefix(param, "apiKey=")
+								if idx := strings.Index(apiKey, "&"); idx != -1 {
+									apiKey = apiKey[:idx]
+								}
+								break
+							}
+							if idx := strings.Index(param, "apiKey="); idx != -1 {
+								rest := param[idx+len("apiKey="):]
+								if amp := strings.Index(rest, "&"); amp != -1 {
+									rest = rest[:amp]
+								}
+								apiKey = rest
+								break
+							}
 						}
 					}
 					if apiKey == "" {
 						http.Error(w, "API key required", http.StatusUnauthorized)
 						return
 					}
-					_, err := api.ValidateAPIKey(apiKey)
-					if err != nil {
+					if _, err := api.ValidateAPIKey(apiKey); err != nil {
 						http.Error(w, "Invalid API key", http.StatusUnauthorized)
 						return
 					}
 				}
 
-				data := endpoints[params[0]](params[1:])
+				data := endpoints[endpointName](params[1:])
 				w.Header().Set("Content-Type", "application/json")
 				w.Write(data)
 				return

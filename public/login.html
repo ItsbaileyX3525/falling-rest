@@ -3,9 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/assets/css/login.css">
   <title>Login</title>
 </head>
 <body>
-  
+  <a id="return-btn" href="/account">Account</a>
+  <div id="app">
+    <div id="form-container">
+      <form id="form">
+        <label for="email">Email:</label>
+        <input type="text" name="email" placeholder="JohnDoe@gmail.com">
+        <label for="pwd">Password:</label>
+        <input  type="password" name="pwd" placeholder="••••">
+        <input id="submit-btn" type="submit" value="Login">
+      </form>
+    </div>
+  </div>
 </body>
+<script src="/assets/javascript/login.js"></script>
 </html>

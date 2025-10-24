@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --font-sans: Inter, sans-serif;
+}
+
+html {
+    width: 100vw;
+    height: 100vh;
+    color: #141414;
+    font-family: var(--font-sans);
+    background: url('/assets/images/status/404.png') no-repeat center center fixed; 
+    background-repeat: no-repeat; background-size: 100% 100%;
+    margin: 0; 
+    padding: 0; 
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	margin-left: 64px;
+	min-height: 100%;
+	display: flow-root;
+    overflow-x: hidden;
+}
+
+
+* {
+    margin: 0;
+    filter: brightness(1) saturate(1);
+    padding: 0;
+}
+
+#app {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 16px;
+}
+
+p {
+    font-size: 48px;
+}
+
+button {
+    background-color: lightblue;
+    border-radius: 32px;
+    font-size: 32px;
+}
