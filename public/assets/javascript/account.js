@@ -34,4 +34,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     APIKeyEl.innerText = APIKey
     await returnAPIResponse(`/api/decode?input=YmFzZTY0IGVuY29kZWQgdGV4dA==?type=base64?apiKey=${APIKey}`);
     await returnAPIResponse(`/api/fallPeople?apiKey=${APIKey}`);
+    await returnAPIResponse(`/api/fallQuotes?apiKey=${APIKey}`);
 })
