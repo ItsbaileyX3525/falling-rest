@@ -49,4 +49,5 @@ button {
     background-color: lightblue;
     border-radius: 32px;
     font-size: 32px;
+    cursor: pointer;
 }

@@ -10,9 +10,10 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/joho/godotenv"
-	//"strconv"
 )
 
 var extensions = map[string]string{
@@ -47,6 +48,17 @@ var authRoutes = map[string]http.HandlerFunc{
 
 var vars = map[string]interface{}{}
 
+// Rate limiting: per-IP fixed window limiter
+type clientLimit struct {
+	count       int
+	windowStart time.Time
+}
+
+var (
+	rateLimiters = make(map[string]*clientLimit)
+	rateMu       = sync.Mutex{}
+)
+
 // How the fuck did I get this working...
 func parseHTML(content []byte) string { //Fuck if I know what im doing here but hey worth a shot
 	reader := bytes.NewReader(content)
@@ -76,6 +88,24 @@ func parseHTML(content []byte) string { //Fuck if I know what im doing here but 
 	return result
 }
 
+// getClientIP attempts to return the real client IP using X-Forwarded-For when present,
+// otherwise falls back to RemoteAddr.
+func getClientIP(r *http.Request) string {
+	// X-Forwarded-For may contain a comma-separated list; take the first
+	if xf := r.Header.Get("X-Forwarded-For"); xf != "" {
+		parts := strings.Split(xf, ",")
+		if len(parts) > 0 {
+			return strings.TrimSpace(parts[0])
+		}
+	}
+	// Fallback to RemoteAddr (host:port)
+	host := r.RemoteAddr
+	if idx := strings.LastIndex(host, ":"); idx != -1 {
+		return host[:idx]
+	}
+	return host
+}
+
 func handler(w http.ResponseWriter, r *http.Request) {
 	fullUrl := r.URL.String()
 	suffix := strings.Split(fullUrl, ".")
@@ -97,6 +127,23 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	//Handle API endpoints
 	urlSplit := strings.Split(fullUrl, "/")
 	if len(urlSplit) > 1 && strings.TrimSpace(urlSplit[1]) == "api" {
+		clientIP := getClientIP(r)
+		const maxReq = 30
+		const windowDur = time.Minute
+		now := time.Now()
+		rateMu.Lock()
+		lim, ok := rateLimiters[clientIP]
+		if !ok || now.Sub(lim.windowStart) >= windowDur {
+			rateLimiters[clientIP] = &clientLimit{count: 1, windowStart: now}
+		} else {
+			if lim.count >= maxReq {
+				rateMu.Unlock()
+				http.Error(w, "Too Many Requests", http.StatusTooManyRequests)
+				return
+			}
+			lim.count++
+		}
+		rateMu.Unlock()
 		if len(urlSplit) > 2 {
 			apiEndpoint := urlSplit[2]
 			params := strings.Split(apiEndpoint, "?")
