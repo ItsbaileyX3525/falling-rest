@@ -1,0 +1,153 @@
+[gd_scene load_steps=11 format=3 uid="uid://c3a113puohtx8"]
+
+[ext_resource type="Script" uid="uid://pukeeji75v0t" path="res://Scripts/Menu.gd" id="1_vfnt7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vfnt7"]
+bg_color = Color(0.837035, 0.40368465, 0.82751733, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d4a25"]
+bg_color = Color(0.8352941, 0.40392157, 0.827451, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vlheg"]
+bg_color = Color(0.41554677, 0.67783844, 0.36327076, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_06sv8"]
+bg_color = Color(0.41568628, 0.6784314, 0.3647059, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jmjkl"]
+bg_color = Color(0.9768192, 0.38197607, 0.18670028, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7e7a2"]
+bg_color = Color(0.9764706, 0.3764706, 0.1882353, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cn24f"]
+bg_color = Color(0.69803923, 0.59607846, 0, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a3mjc"]
+bg_color = Color(0.69803923, 0.59607846, 0, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2iym8"]
+bg_color = Color(5.77569e-06, 0.65437055, 0.8727766, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vfnt7")
+
+[node name="Main" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="Main"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -266.0
+offset_top = -145.0
+offset_right = 266.0
+offset_bottom = 219.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Main/CenterContainer"]
+layout_mode = 2
+
+[node name="START" type="Button" parent="Main/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxFlat_vfnt7")
+theme_override_styles/hover = SubResource("StyleBoxFlat_d4a25")
+text = "START"
+
+[node name="OPTIONS" type="Button" parent="Main/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxFlat_vlheg")
+theme_override_styles/hover = SubResource("StyleBoxFlat_06sv8")
+text = " OPTIONS "
+
+[node name="EXIT" type="Button" parent="Main/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxFlat_jmjkl")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7e7a2")
+text = "EXIT"
+
+[node name="GAME2" type="Button" parent="Main/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxFlat_cn24f")
+theme_override_styles/hover = SubResource("StyleBoxFlat_a3mjc")
+text = " OTHER GAME??? "
+
+[node name="CenterContainer2" type="CenterContainer" parent="Main"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Main/CenterContainer2"]
+layout_mode = 2
+theme_override_constants/margin_top = 30
+
+[node name="Label" type="Label" parent="Main/CenterContainer2/MarginContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxFlat_2iym8")
+text = "FALLING GAME"
+
+[connection signal="pressed" from="Main/CenterContainer/VBoxContainer/START" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="Main/CenterContainer/VBoxContainer/OPTIONS" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="Main/CenterContainer/VBoxContainer/EXIT" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="Main/CenterContainer/VBoxContainer/GAME2" to="." method="_on_game_2_pressed"]

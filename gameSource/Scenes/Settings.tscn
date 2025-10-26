@@ -1,0 +1,54 @@
+[gd_scene load_steps=2 format=3 uid="uid://bd7dul41o7v6d"]
+
+[ext_resource type="Script" uid="uid://da0ls85lfwynn" path="res://Scripts/Settings.gd" id="1_4hxq3"]
+
+[node name="Options" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4hxq3")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 0
+offset_right = 1752.3091
+offset_bottom = 84.0
+scale = Vector2(0.6574183, 0.6574183)
+theme_override_font_sizes/font_size = 61
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="fullscreen" type="Button" parent="."]
+layout_mode = 0
+offset_left = 18.000002
+offset_top = 143.0
+offset_right = 1197.0
+offset_bottom = 309.0
+scale = Vector2(0.2722748, 0.2722748)
+theme_override_font_sizes/font_size = 116
+text = "ENABLE FULLSCREEN"
+
+[node name="VSYNC" type="Button" parent="."]
+layout_mode = 0
+offset_left = 18.000002
+offset_top = 240.0
+offset_right = 1197.0
+offset_bottom = 406.0
+scale = Vector2(0.2722748, 0.2722748)
+theme_override_font_sizes/font_size = 116
+text = "DISABLE VSYNC"
+
+[node name="RETURN" type="Button" parent="."]
+layout_mode = 0
+offset_left = 823.0
+offset_right = 1412.0
+offset_bottom = 99.0
+scale = Vector2(0.55901134, 0.55901134)
+theme_override_font_sizes/font_size = 66
+text = "RETURN TO MENU"
+
+[connection signal="pressed" from="fullscreen" to="." method="_on_fullscreen_pressed"]
+[connection signal="pressed" from="VSYNC" to="." method="_on_vsync_pressed"]
+[connection signal="pressed" from="RETURN" to="." method="_on_return_pressed"]
