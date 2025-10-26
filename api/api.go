@@ -43,6 +43,19 @@ var fallPeople = []Quotes{
 	{Quote: "I am very saddened by the death of Siradiou Diallo… For me, he embodied constructive opposition.", Person: "François Lonsény Fall"},
 }
 
+var inFallQuotes = []Quotes{
+	{Quote: "Autumn is a second spring when every leaf is a flower.", Person: "Albert Camus"},
+	{Quote: "Every leaf speaks bliss to me, fluttering from the autumn tree.", Person: "Emily Bronte"},
+	{Quote: "And all at once, summer collapsed into fall.", Person: "Oscar Wilde"},
+	{Quote: "Life starts all over again when it gets crisp in the fall.", Person: "F. Scott"},
+	{Quote: "Autumn… the year's last, loveliest smile.", Person: "William Cullen Bryant"},
+	{Quote: "Notice that autumn is more the season of the soul than of nature.", Person: "Friedrich Nietzsche"},
+	{Quote: "Autumn carries more gold in its pocket than all the other seasons.", Person: "Jim Bishop"},
+	{Quote: "I'm so glad I live in a world where there are Octobers.", Person: "L. M. Montgomery"},
+	{Quote: "The leaves are all falling, and they're falling like they're falling in love with the ground.", Person: "Andrea Gibson"},
+	{Quote: "How beautifully leaves grow old! How full of light and color are their last days!", Person: "ohn Burroughs"},
+}
+
 var seasonalFacts = []Facts{
 	{Fact: "Fall occurs between summer and winter. In the Northern Hemisphere, it typically starts around September 22-23 and ends around December 21, while in the Southern Hemisphere, it runs from March to June."},
 	{Fact: "The season begins with the autumnal equinox, when day and night are roughly equal in length."},
@@ -100,6 +113,23 @@ func Science(params []string) []byte {
 
 	if err != nil {
 		fmt.Println("Something went wrong")
+
+		jsonErr := Response{Success: false, Message: "Something went wrong"}
+		jsonStr, _ := json.Marshal(jsonErr)
+		return jsonStr
+	}
+
+	return jsonStr
+}
+
+func QuotesFromFall(params []string) []byte {
+	genRandom()
+	testJson := inFallQuotes[rand.Intn(len(inFallQuotes))]
+
+	jsonStr, err := json.Marshal(testJson)
+
+	if err != nil {
+		fmt.Println("Error occured!")
 
 		jsonErr := Response{Success: false, Message: "Something went wrong"}
 		jsonStr, _ := json.Marshal(jsonErr)

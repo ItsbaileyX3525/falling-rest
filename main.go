@@ -37,6 +37,7 @@ var endpoints = map[string]func([]string) []byte{
 	"motionImages":    api.MotionImage,
 	"decode":          api.DecodeHash,
 	"fallPeople":      api.People,
+	"fallQuotes":      api.QuotesFromFall,
 }
 
 var authRoutes = map[string]http.HandlerFunc{
@@ -150,7 +151,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			if _, ok := endpoints[params[0]]; ok {
 				endpointName := params[0]
 
-				if endpointName == "decode" || endpointName == "fallPeople" {
+				if endpointName == "decode" || endpointName == "fallPeople" || endpointName == "fallQuotes" {
 					apiKey := ""
 					if len(params) > 1 {
 						for _, param := range params[1:] {
