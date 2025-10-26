@@ -34,6 +34,43 @@ I offer a lot of endpoints for you to make GET requests to and collect some data
 }
 ```
 
+### `GET` /api/motionImages
+
+```json
+{
+  "ImageUrl": "/assets/images/motion/motion3.jpg"
+}
+```
+
+### `GET` /api/fallPeople
+
+```json
+{
+  "Quote": "We have a petticoat government. Mrs. Wilson is president.",
+  "Person": "Albert B. Fall"
+}
+```
+
+### `GET` /api/decode (single decode request)
+
+Use the custom parameter separator format; example decodes a Base64 input:
+
+```json
+{
+  "decoded": "test"
+}
+```
+
+### `GET` /api/decode?types
+
+Returns the available decoder types:
+
+```json
+{
+  "available decoders": ["base64", "base32", "binary", "hexadecimal"]
+}
+```
+
 ### Rendering html? Wdym?
 
 Well I decided it would be quite cool for me to dynamically change data in the HTML like php so that I can easily change things I need without having to make fetch requests or have weird crappy javascript!
@@ -41,3 +78,7 @@ Well I decided it would be quite cool for me to dynamically change data in the H
 ### Why did you create a backend
 
 To reach 10 hours lol. A normal REST site would only like 1 hour to create, so to make my time reach the 10 hour goal I wrote the entire backend manually.
+
+## Lemme hear about this game
+
+Well the game is really cool, you can find it by going on to the account section of the website and you can then test out and play the game!
