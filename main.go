@@ -6,6 +6,7 @@ import (
 	"falling_rest/api"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -257,6 +258,33 @@ func main() {
 	vars["test"] = &test
 	http.HandleFunc("/", handler)
 
-	fmt.Println("Server started")
-	http.ListenAndServe(":8081", nil) //Steam webhelper uses port 8080 >:(
+	certDir := "certs"
+	candidates := []struct{ cert, key string }{
+		{filepath.Join(certDir, "fullchain.pem"), filepath.Join(certDir, "privkey.pem")},
+		{filepath.Join(certDir, "cert.pem"), filepath.Join(certDir, "key.pem")},
+	}
+
+	certFile := ""
+	keyFile := ""
+	for _, c := range candidates {
+		if _, err := os.Stat(c.cert); err == nil {
+			if _, err2 := os.Stat(c.key); err2 == nil {
+				certFile = c.cert
+				keyFile = c.key
+				break
+			}
+		}
+	}
+
+	if certFile != "" && keyFile != "" {
+		fmt.Println("TLS certificates found, starting HTTPS on :443")
+		if err := http.ListenAndServeTLS(":443", certFile, keyFile, nil); err != nil {
+			log.Fatalf("failed to start HTTPS server: %v", err)
+		}
+	} else {
+		fmt.Println("No TLS certificates found in 'certs/', starting HTTP on :8081")
+		if err := http.ListenAndServe(":8081", nil); err != nil {
+			log.Fatalf("failed to start HTTP server: %v", err)
+		}
+	}
 }
