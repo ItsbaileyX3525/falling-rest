@@ -20,6 +20,27 @@ var (
 	mu       = sync.RWMutex{}
 )
 
+// cleanupSessions removes expired sessions every 5 minutes
+func cleanupSessions() {
+	ticker := time.NewTicker(5 * time.Minute)
+	defer ticker.Stop()
+	for range ticker.C {
+		mu.Lock()
+		now := time.Now()
+		for token, session := range sessions {
+			if now.After(session.ExpiresAt) {
+				delete(sessions, token)
+			}
+		}
+		mu.Unlock()
+	}
+}
+
+func init() {
+	// Start cleanup goroutine when package loads
+	go cleanupSessions()
+}
+
 type User struct {
 	ID       int    `json:"id"`
 	Email    string `json:"email"`

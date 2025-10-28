@@ -61,6 +61,22 @@ var (
 	rateMu       = sync.Mutex{}
 )
 
+// cleanupRateLimiters removes expired rate limit windows periodically
+func cleanupRateLimiters() {
+	ticker := time.NewTicker(2 * time.Minute)
+	defer ticker.Stop()
+	for range ticker.C {
+		rateMu.Lock()
+		now := time.Now()
+		for ip, lim := range rateLimiters {
+			if now.Sub(lim.windowStart) > 2*time.Minute {
+				delete(rateLimiters, ip)
+			}
+		}
+		rateMu.Unlock()
+	}
+}
+
 // How the fuck did I get this working...
 func parseHTML(content []byte) string { //Fuck if I know what im doing here but hey worth a shot
 	reader := bytes.NewReader(content)
@@ -256,6 +272,10 @@ func main() {
 	vars["websiteName"] = &websiteName
 	vars["websiteVersion"] = &websiteVersion
 	vars["test"] = &test
+
+	// Start rate limiter cleanup goroutine
+	go cleanupRateLimiters()
+
 	http.HandleFunc("/", handler)
 
 	certDir := "certs"

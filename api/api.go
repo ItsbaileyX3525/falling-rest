@@ -13,6 +13,11 @@ import (
 	"time"
 )
 
+func init() {
+	// Seed random once at package init
+	rand.Seed(time.Now().UnixNano())
+}
+
 type Facts struct {
 	Fact string `json:"fact"`
 }
@@ -106,7 +111,6 @@ var motionImages = []Images{
 }
 
 func Science(params []string) []byte {
-	genRandom()
 	random := scientificFacts[rand.Intn(len(scientificFacts))]
 
 	jsonStr, err := json.Marshal(random)
@@ -123,7 +127,6 @@ func Science(params []string) []byte {
 }
 
 func QuotesFromFall(params []string) []byte {
-	genRandom()
 	testJson := inFallQuotes[rand.Intn(len(inFallQuotes))]
 
 	jsonStr, err := json.Marshal(testJson)
@@ -140,7 +143,6 @@ func QuotesFromFall(params []string) []byte {
 }
 
 func People(params []string) []byte {
-	genRandom()
 	testJson := fallPeople[rand.Intn(len(fallPeople))]
 
 	jsonStr, err := json.Marshal(testJson)
@@ -274,7 +276,6 @@ func DecodeHash(params []string) []byte {
 }
 
 func Season(params []string) []byte {
-	genRandom()
 	testJson := seasonalFacts[rand.Intn(len(seasonalFacts))]
 
 	jsonStr, err := json.Marshal(testJson)
@@ -291,7 +292,6 @@ func Season(params []string) []byte {
 }
 
 func LeafImage(params []string) []byte {
-	genRandom()
 	random := leavesImages[rand.Intn(len(leavesImages))]
 
 	jsonStr, err := json.Marshal(random)
@@ -308,7 +308,6 @@ func LeafImage(params []string) []byte {
 }
 
 func MotionImage(params []string) []byte {
-	genRandom()
 	var random Images
 	if slices.Contains(params, "noburger") {
 		newRand := motionImages[1:]
@@ -328,9 +327,4 @@ func MotionImage(params []string) []byte {
 	}
 
 	return jsonStr
-}
-
-func genRandom() {
-	rand.New(rand.NewSource(time.Now().UnixNano()))
-
 }
